@@ -1,0 +1,24 @@
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Verible version
+ENV VERIBLE_VERSION=v0.0-4023-gc1271a00
+
+
+
+# Download and install Verible
+RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}.tar.gz \
+    && tar -xzf verible-${VERIBLE_VERSION}.tar.gz \
+    && mv verible-${VERIBLE_VERSION} /usr/local/verible \
+    && ln -s /usr/local/verible/bin/* /usr/local/bin/ \
+    && rm verible-${VERIBLE_VERSION}.tar.gz
+
+# Set working directory
+WORKDIR /workspace
+
+ENTRYPOINT ["/bin/bash"]
