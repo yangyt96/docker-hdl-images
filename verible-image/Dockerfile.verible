@@ -9,14 +9,15 @@ RUN apt-get update && apt-get install -y \
 # Set Verible version
 ENV VERIBLE_VERSION=v0.0-4023-gc1271a00
 
-
-
 # Download and install Verible
-RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}.tar.gz \
-    && tar -xzf verible-${VERIBLE_VERSION}.tar.gz \
+RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz \
+    && tar -xzf verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz \
     && mv verible-${VERIBLE_VERSION} /usr/local/verible \
     && ln -s /usr/local/verible/bin/* /usr/local/bin/ \
-    && rm verible-${VERIBLE_VERSION}.tar.gz
+    && rm verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz
+
+# Ensure PATH includes Verible binaries
+ENV PATH="/usr/local/verible/bin:${PATH}"
 
 # Set working directory
 WORKDIR /workspace
