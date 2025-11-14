@@ -28,7 +28,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -f verible-image/Dockerfile.image \
+            -f verible-image/Dockerfile.verible \
             -t ghcr.io/${{ github.repository_owner }}/verible:latest \
             verible-image
 
