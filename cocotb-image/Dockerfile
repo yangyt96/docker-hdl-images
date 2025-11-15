@@ -28,6 +28,7 @@ RUN apt-get install -y \
     python3-pip \
     python3-venv \
     python-setuptools \
+    git \
     help2man
 RUN rm -rf /var/lib/apt/lists/*
 
