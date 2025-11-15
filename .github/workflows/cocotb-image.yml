@@ -1,0 +1,39 @@
+name: Build and Push Verible Docker Image
+
+on:
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout your repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Log in to GitHub Container Registry (GHCR) using a PAT
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Use a personal access token stored in repo secrets
+          password: ${{ secrets.GHCR_PAT }}
+
+      # Step 3: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f cocotb-image/Dockerfile \
+            -t ghcr.io/${{ github.repository_owner }}/cocotb:latest \
+            cocotb-image
+
+      # Step 4: Push the Docker image to GHCR
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/cocotb:latest

@@ -46,15 +46,16 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && git clone https://github.com/verilator/verilator.git /opt/verilator \
     && cd /opt/verilator \
-    && git pull \
     && autoconf \
     && ./configure \
     && make -j$(nproc) \
-    && make install \
-    && cd / \
-    && rm -rf /opt/verilator \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && make install
+
+    # && git checkout v5.042
+    # && cd / \
+    # && rm -rf /opt/verilator \
+    # && apt-get clean \
+    # && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PATH="/usr/local/share/verilator/bin:${PATH}"
