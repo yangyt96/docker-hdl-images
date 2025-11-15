@@ -85,10 +85,7 @@ RUN rm -rf /tmp/Verilator
 
 # -------------------------------------------------------------------
 # # Download cocotb
-# ENV VIRTUAL_ENV=/opt/venv
-# ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-# RUN chmod 777 /opt -R
-# RUN python3 -m venv $VIRTUAL_ENV
-# RUN cd /opt \
-#     && git clone https://github.com/cocotb/cocotb.git --depth 1 --branch v1.8.0
+# 
+
+RUN pip install cocotb cocotbext-spi cocotbext-uart cocotbext-axi
 
