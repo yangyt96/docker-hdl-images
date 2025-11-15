@@ -44,20 +44,18 @@ RUN chmod 777 /tmp -R
 
 # -------------------------------------------------------------------
 # Install Verilator
-# Download: https://github.com/verilator/verilator/tags
 
-# COPY verilator-5.022.tar.gz /tmp/verilator-5.022.tar.gz
+RUN cd /tmp \
+    && git clone https://github.com/verilator/verilator.git \
+    && cd verilator \
+    && git checkout v5.042 \
+    && unset VERILATOR_ROOT \
+    && autoconf \
+    && ./configure \
+    && make --silent \
+    && make --silent install
 
-# RUN cd /tmp \
-#     && tar xfvz verilator-5.022.tar.gz
-# RUN cd /tmp/verilator-5.022 \
-#     && unset VERILATOR_ROOT \
-#     && autoconf \
-#     && ./configure \
-#     && make --silent \
-#     && make --silent install
-# RUN rm -rf /tmp/verilator-5.022 \
-#     rm /tmp/verilator-5.022.tar.gz
+RUN rm -rf /tmp/Verilator
 
 # -------------------------------------------------------------------
 # Install GHDL
