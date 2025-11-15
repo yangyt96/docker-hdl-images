@@ -1,4 +1,4 @@
-name: Build and Push Verible Docker Image
+name: Build and Push Cocotb Docker Image
 
 on:
   push:
