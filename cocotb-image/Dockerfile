@@ -25,8 +25,9 @@ RUN apt-get install -y \
     numactl \
     perl-doc \
     python3-dev \
+    python3-pip \
+    python3-venv \
     python-setuptools \
-    python3-venv\
     help2man
 RUN rm -rf /var/lib/apt/lists/*
 
