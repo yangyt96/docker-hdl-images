@@ -87,5 +87,5 @@ RUN rm -rf /tmp/Verilator
 # # Download cocotb
 # 
 
-RUN pip install cocotb cocotbext-spi cocotbext-uart cocotbext-axi
+RUN pip3 install cocotb cocotbext-spi cocotbext-uart cocotbext-axi
 
