@@ -4,64 +4,99 @@ FROM ubuntu:22.04
 # Set noninteractive mode for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install basic dependencies
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    build-essential \
-    wget \
-    git \
-    curl \
-    sudo \
-    pkg-config \
-    python3.11 \
-    python3.11-venv \
-    python3.11-dev \
-    python3-pip \
+# Re-synchronize the OS package index
+RUN sudo apt-get update
+
+# Install all needed packages for all simulators
+RUN sudo apt-get install -y \
+    perl \
     make \
+    flex \
+    gnat \
+    gtkwave \
+    swig \
     autoconf \
     g++ \
-    flex \
     bison \
     libfl2 \
     libfl-dev \
-    libffi-dev \
-    && rm -rf /var/lib/apt/lists/*
+    ccache \
+    libgoogle-perftools-dev \
+    numactl \
+    perl-doc \
+    python3-dev \
+    python-setuptools \
+    python3-venv\
+    help2man
+RUN sudo rm -rf /var/lib/apt/lists/*
 
-# Make python3.11 the default python3
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+# Install Python with --enable-shared
+ARG PYTHON_VERSION=3.9.2
+RUN rm -rf ${HOME}/.pyenv/versions/${PYTHON_VERSION}
+RUN PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION}
+RUN pyenv global ${PYTHON_VERSION}
 
-# Upgrade pip
-RUN python3 -m pip install --upgrade pip setuptools wheel
+RUN pip3 install --upgrade pip
 
-# Install cocotb version 2.0.x
-RUN pip install "cocotb~=2.0"
+# Install extra packages
+RUN pip3 install -U pytest flake8 pylint pytype mypy gcovr cherrypy dowser
 
-# Install Verilator (latest stable)
-RUN apt-get update && apt-get install -y \
-    git \
-    autoconf \
-    g++ \
-    flex \
-    bison \
-    pkg-config \
-    && git clone https://github.com/verilator/verilator.git /opt/verilator \
-    && cd /opt/verilator \
-    && autoconf \
-    && ./configure \
-    && make -j$(nproc) \
-    && make install
+# -------------------------------------------------------------------
+# Install Icarus Verilog
+# RUN brew install icarus-verilog
 
-    # && git checkout v5.042
-    # && cd / \
-    # && rm -rf /opt/verilator \
-    # && apt-get clean \
-    # && rm -rf /var/lib/apt/lists/*
+# -------------------------------------------------------------------
+# make full access of the directory /tmp
+RUN sudo chmod 777 /tmp -R
 
-# Set environment variables
-ENV PATH="/usr/local/share/verilator/bin:${PATH}"
+# -------------------------------------------------------------------
+# Install Verilator
+# Download: https://github.com/verilator/verilator/tags
 
-# Set work directory
-WORKDIR /workspace
+# COPY verilator-5.022.tar.gz /tmp/verilator-5.022.tar.gz
 
-# Default command
-CMD ["/bin/bash"]
+# RUN cd /tmp \
+#     && tar xfvz verilator-5.022.tar.gz
+# RUN cd /tmp/verilator-5.022 \
+#     && unset VERILATOR_ROOT \
+#     && autoconf \
+#     && ./configure \
+#     && make --silent \
+#     && sudo make --silent install
+# RUN rm -rf /tmp/verilator-5.022 \
+#     rm /tmp/verilator-5.022.tar.gz
+
+# -------------------------------------------------------------------
+# Install GHDL
+# Download: https://github.com/ghdl/ghdl/releases
+
+# COPY ghdl-4.1.0.tar.gz /tmp/ghdl-4.1.0.tar.gz
+
+# RUN cd /tmp \
+#     && tar xfvz ghdl-4.1.0.tar.gz
+# RUN cd /tmp/ghdl-4.1.0 \
+#     && ./configure \
+#     && make --silent \
+#     && sudo make --silent install
+# RUN rm /tmp/ghdl-4.1.0.tar.gz \
+#     && rm -rf /tmp/ghdl-4.1.0
+
+# -------------------------------------------------------------------
+# # Install cvc
+
+# RUN git clone https://github.com/cambridgehackers/open-src-cvc.git --depth=1 cvc \
+#     && cd cvc/src \
+#     && make -f makefile.cvc64 --silent \
+#     && sudo cp cvc64 /usr/local/bin \
+#     && cd ../.. \
+#     && rm -rf cvc
+
+# -------------------------------------------------------------------
+# # Download cocotb
+# ENV VIRTUAL_ENV=/opt/venv
+# ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# RUN sudo chmod 777 /opt -R
+# RUN python3 -m venv $VIRTUAL_ENV
+# RUN cd /opt \
+#     && git clone https://github.com/cocotb/cocotb.git --depth 1 --branch v1.8.0
+
