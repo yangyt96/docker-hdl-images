@@ -42,7 +42,7 @@ RUN chmod 777 /tmp -R
 # -------------------------------------------------------------------
 ## Install Icarus Verilog
 
-RUN /tmp \
+RUN cd /tmp \
     && git clone https://github.com/steveicarus/iverilog.git \
     && cd iverilog \
     && git checkout v12_0 \
