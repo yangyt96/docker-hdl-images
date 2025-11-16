@@ -36,10 +36,6 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN pip3 install -U pytest flake8 pylint pytype mypy gcovr cherrypy dowser
 
 # -------------------------------------------------------------------
-# Install Icarus Verilog
-# RUN brew install icarus-verilog
-
-# -------------------------------------------------------------------
 # make full access of the directory /tmp
 RUN chmod 777 /tmp -R
 
@@ -57,31 +53,6 @@ RUN cd /tmp \
     && make --silent install
 
 RUN rm -rf /tmp/Verilator
-
-# -------------------------------------------------------------------
-# Install GHDL
-# Download: https://github.com/ghdl/ghdl/releases
-
-# COPY ghdl-4.1.0.tar.gz /tmp/ghdl-4.1.0.tar.gz
-
-# RUN cd /tmp \
-#     && tar xfvz ghdl-4.1.0.tar.gz
-# RUN cd /tmp/ghdl-4.1.0 \
-#     && ./configure \
-#     && make --silent \
-#     && make --silent install
-# RUN rm /tmp/ghdl-4.1.0.tar.gz \
-#     && rm -rf /tmp/ghdl-4.1.0
-
-# -------------------------------------------------------------------
-# # Install cvc
-
-# RUN git clone https://github.com/cambridgehackers/open-src-cvc.git --depth=1 cvc \
-#     && cd cvc/src \
-#     && make -f makefile.cvc64 --silent \
-#     && cp cvc64 /usr/local/bin \
-#     && cd ../.. \
-#     && rm -rf cvc
 
 # -------------------------------------------------------------------
 # # Download cocotb
