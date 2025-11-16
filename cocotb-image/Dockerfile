@@ -40,6 +40,10 @@ RUN pip3 install -U pytest flake8 pylint pytype mypy gcovr cherrypy dowser
 RUN chmod 777 /tmp -R
 
 # -------------------------------------------------------------------
+## Install Icarus Verilog
+RUN brew install icarus-verilog
+
+# -------------------------------------------------------------------
 # Install Verilator
 
 RUN cd /tmp \
@@ -58,5 +62,5 @@ RUN rm -rf /tmp/Verilator
 # # Download cocotb
 # 
 
-RUN pip3 install cocotb cocotbext-spi cocotbext-uart cocotbext-axi
+RUN pip3 install cocotb cocotb-test cocotbext-axi
 
