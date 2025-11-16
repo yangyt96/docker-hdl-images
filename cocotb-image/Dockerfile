@@ -41,7 +41,14 @@ RUN chmod 777 /tmp -R
 
 # -------------------------------------------------------------------
 ## Install Icarus Verilog
-RUN brew install icarus-verilog
+
+RUN /tmp \
+    && git clone https://github.com/steveicarus/iverilog.git \
+    && cd iverilog \
+    && git checkout v12_0 \
+    && sh autoconf.sh \
+    && ./configure \
+    && make
 
 # -------------------------------------------------------------------
 # Install Verilator
