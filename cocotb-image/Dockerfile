@@ -13,9 +13,11 @@ RUN apt-get install -y \
     make \
     flex \
     gnat \
+    gperf \
     gtkwave \
     swig \
     autoconf \
+    gcc \
     g++ \
     bison \
     libfl2 \
@@ -48,7 +50,10 @@ RUN cd /tmp \
     && git checkout v12_0 \
     && sh autoconf.sh \
     && ./configure \
-    && make
+    && make \
+    && make install
+
+RUN rm -rf /tmp/iverilog
 
 # -------------------------------------------------------------------
 # Install Verilator
@@ -63,7 +68,7 @@ RUN cd /tmp \
     && make --silent \
     && make --silent install
 
-RUN rm -rf /tmp/Verilator
+RUN rm -rf /tmp/verilator
 
 # -------------------------------------------------------------------
 # # Download cocotb
