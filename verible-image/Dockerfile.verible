@@ -1,25 +1,32 @@
-FROM ubuntu:22.04
+# ======================================
+# 1. Declare ARG for all stages
+# ======================================
+ARG VERIBLE_VERSION=v0.0-4023-gc1271a00
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    tar \
-    && rm -rf /var/lib/apt/lists/*
+# ======================================
+# 2. Builder Stage
+# ======================================
+FROM ubuntu:22.04 AS builder
+ARG VERIBLE_VERSION
 
-# Set Verible version
-ENV VERIBLE_VERSION=v0.0-4023-gc1271a00
+RUN apt-get update && apt-get install -y wget tar && rm -rf /var/lib/apt/lists/*
 
-# Download and install Verible
 RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz \
-    && tar -xzf verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz \
-    && mv verible-${VERIBLE_VERSION} /usr/local/verible \
-    && ln -s /usr/local/verible/bin/* /usr/local/bin/ \
-    && rm verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz
+    && tar -xzf verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz
 
-# Ensure PATH includes Verible binaries
+# ======================================
+# 3. Runtime Stage
+# ======================================
+FROM debian:stable-slim
+ARG VERIBLE_VERSION
+
+# Copy only the binaries from the builder stage
+COPY --from=builder /verible-${VERIBLE_VERSION} /usr/local/verible
+
+# Symlink binaries into PATH
+RUN ln -s /usr/local/verible/bin/* /usr/local/bin/
+
 ENV PATH="/usr/local/verible/bin:${PATH}"
 
-# Set working directory
 WORKDIR /workspace
-
 ENTRYPOINT ["/bin/bash"]
